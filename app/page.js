@@ -1,13 +1,21 @@
 "use client";
 import Image from "next/image";
 import qrcode from "qrcode-generator";
+import { useState } from "react";
 
 export default function Home() {
+  const [data, setData] = useState("Hello");
+
+  const handleChange = (event) => {
+    event.preventDefault();
+    setData(event.target.value);
+  };
+
   const generateQRImage = () => {
-    var typeNumber = 4;
+    var typeNumber = 20;
     var errorCorrectionLevel = "L";
     var qr = qrcode(typeNumber, errorCorrectionLevel);
-    qr.addData("This is Sample QR by Vikas :). Take a chill pill. Peace.✌️");
+    qr.addData(data);
     qr.make();
     document.getElementById("placeHolder").innerHTML = qr.createImgTag();
   };
@@ -17,14 +25,15 @@ export default function Home() {
       <div className="container qr-input-form">
         <label>Enter URL to generate The QR Code</label>
         <br />
-        <input type="text" />
+        <input type="text" value={data} onChange={handleChange} />
         <button onClick={generateQRImage}>Generate</button>
+        
       </div>
       <div className="display-qr " id="placeHolder">
         <Image
           src="/world.png"
-          width={300}
-          height={300}
+          width={400}
+          height={400}
           alt="Picture of the author"
         />
       </div>
