@@ -3,8 +3,9 @@ import Image from "next/image";
 import qrcode from "qrcode-generator";
 import { useState } from "react";
 
+
 export default function Home() {
-  const [data, setData] = useState("Hello");
+  const [data, setData] = useState("https://www.google.com/");
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -18,6 +19,21 @@ export default function Home() {
     qr.addData(data);
     qr.make();
     document.getElementById("placeHolder").innerHTML = qr.createImgTag();
+    document.getElementById("result").innerText = `QR Generated for: ${data}`
+
+
+    const imgElement = document.querySelector("#placeHolder img");
+    const pngUrl = imgElement.src.replace('image/gif', 'image/octet-stream');
+    const downloadLink = document.createElement('a');
+    downloadLink.href = pngUrl;
+    downloadLink.download = 'qr-code.png';
+    downloadLink.innerText = 'Download QR Code';
+    // document.getElementById("downloadLink").innerHTML = 'Download';
+    document.getElementById("downloadLink").appendChild(downloadLink);
+
+    const downloadLinkContainer = document.getElementById("downloadLink");
+    downloadLinkContainer.innerHTML = ''; // Clear previous content
+    downloadLinkContainer.appendChild(downloadLink);
   };
 
   return (
@@ -27,16 +43,10 @@ export default function Home() {
         <br />
         <input type="text" value={data} onChange={handleChange} />
         <button onClick={generateQRImage}>Generate</button>
-        
+        <p id="result"></p>
+      <div id="downloadLink"></div>
       </div>
-      <div className="display-qr " id="placeHolder">
-        <Image
-          src="/world.png"
-          width={400}
-          height={400}
-          alt="Picture of the author"
-        />
-      </div>
+      <div className="display-qr " id="placeHolder">      </div>
     </>
   );
 }
